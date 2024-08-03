@@ -4,7 +4,7 @@ import argparse
 import pandas as pd
 import segmentation_models as sm
 from data import DataGenerator
-from callbacks.history import History
+from models.unet_vgg16 import build_model
 
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.callbacks import ModelCheckpoint, CSVLogger
@@ -81,12 +81,12 @@ if __name__ == "__main__":
     #                  os.path.join(args.results_path, f"loss_{train_file}"),
     #                  10, 
     #                  "accuracy")
-    logger = CSVLogger(os.path.join(args.results_path, f"unet_training_set{train_file}_epochs{args.num_epochs}.log"))
+    logger = CSVLogger(os.path.join(args.results_path, f"unet_vgg16_training_set{train_file}_epochs{args.num_epochs}.log"))
     callbacks = [logger]
     # Optimizer
     optimizer = Adam(learning_rate = 1e-3)
     # Model
-    model = sm.Unet('resnet34', classes=1, activation='sigmoid')
+    model = build_model()
     # Metrics
     meaniou = MeanIoU(num_classes=2)
     iou_c0 = IoU(num_classes=2, target_class_ids=[0], name='iou_class0')
